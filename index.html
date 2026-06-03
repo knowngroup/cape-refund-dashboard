@@ -123,7 +123,7 @@ var D={"cards": {"totalDutyPaid": 1147697.26, "es003Duty": 437503.26, "refundApp
     document.getElementById('refresh-ts').textContent='Last refresh: '+D.refreshTimestamp;
     document.getElementById('entry-count-badge').textContent=D.cards.totalEntries+' Entries Analyzed';
 
-    document.getElementById('card1').innerHTML='<div class="stat-label">Total Duty Paid</div><div class="stat-value">'+fmtK(D.cards.totalDutyPaid)+'</div><div class="stat-sub">ES-003 '+fmtK(D.cards.es003Duty)+' + '+fmtK(D.cards.refundApplied)+' applied</div>';
+    document.getElementById('card1').innerHTML='<div class="stat-label">Total Duty Paid</div><div class="stat-value">'+fmtK(D.cards.totalDutyPaid)+'</div><div class="stat-sub">ES-003 current duties: '+fmtK(D.cards.es003Duty)+'<br>IEEPA refund applied: '+fmtK(D.cards.refundApplied)+'</div>';
     document.getElementById('card2').innerHTML='<div class="stat-label">Refund Eligible</div><div class="stat-value">'+fmtK(D.cards.refundEligible)+'</div><div class="stat-sub">Principal only &mdash; excludes interest</div>';
     document.getElementById('card3').innerHTML='<div class="stat-label">Refund Paid</div><div class="stat-value">'+fmtK(D.cards.refundPaid)+'</div><div class="stat-sub">'+D.cards.refundPaidCount+' entries &mdash; '+fmt(D.cards.refundPaidPrincipal)+' + '+fmt(D.cards.refundPaidInterest)+' interest</div>';
     document.getElementById('card4').innerHTML='<div class="stat-label">Pending Refund</div><div class="stat-value">'+fmtK(D.cards.refundEligible - D.cards.refundPaidPrincipal)+'</div><div class="stat-sub">Principal only &mdash; excludes interest</div>';
