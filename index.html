@@ -133,17 +133,19 @@ var D={"cards": {"totalDutyPaid": 1147697.26, "es003Duty": 437503.26, "refundApp
     document.getElementById('importer-section').innerHTML='<h2>Importer Details</h2><div class="fact-row"><span class="fact-label">Importer</span><span class="fact-value">'+im.name+'</span></div><div class="fact-row"><span class="fact-label">Importer Number</span><span class="fact-value mono">'+im.number+'</span></div><div class="fact-row"><span class="fact-label">ACE ID</span><span class="fact-value mono">'+im.aceId+'</span></div><div class="fact-row"><span class="fact-label">Bond Number</span><span class="fact-value mono">'+im.bond+'</span></div><div class="fact-row"><span class="fact-label">Total Entries</span><span class="fact-value">'+im.totalEntries+'</span></div><div class="fact-row"><span class="fact-label">Total Tariff Lines</span><span class="fact-value">'+im.totalLines.toLocaleString()+'</span></div><div class="fact-row"><span class="fact-label">Total Goods Value</span><span class="fact-value">'+fmtK(im.totalGoodsValue)+'</span></div><div class="fact-row"><span class="fact-label">Liquidation Status</span><span class="fact-value" style="font-size:12px">'+lsHtml+'</span></div>';
 
     function renderEntries(filter){
-      var filters=['all','paid','pending','notfiled','ieepa'];
+      var filters=['all','ieepa','paid','s301','s122','s232'];
       if(typeof filter==='number')filter=filters[filter];
       var filtered=D.entries;
       if(filter==='ieepa')filtered=D.entries.filter(function(e){return e.ieepaDuty>0});
       else if(filter==='paid')filtered=D.entries.filter(function(e){return e.refundAmount!==null});
-      else if(filter==='pending')filtered=D.entries.filter(function(e){return e.capeStatus==='CAPE Accepted'&&e.refundAmount===null});
-      else if(filter==='notfiled')filtered=D.entries.filter(function(e){return e.capeStatus==='Not Filed'});
+      else if(filter==='s301')filtered=D.entries.filter(function(e){return e.s301Duty>0});
+      else if(filter==='s122')filtered=D.entries.filter(function(e){return (e.s122Duty||0)>0});
+      else if(filter==='s232')filtered=D.entries.filter(function(e){return (e.s232Duty||0)>0});
       var pc=D.entries.filter(function(e){return e.refundAmount!==null}).length;
-      var pn=D.entries.filter(function(e){return e.capeStatus==='CAPE Accepted'&&e.refundAmount===null}).length;
-      var nf=D.entries.filter(function(e){return e.capeStatus==='Not Filed'}).length;
       var ic=D.entries.filter(function(e){return e.ieepaDuty>0}).length;
+      var c301=D.entries.filter(function(e){return e.s301Duty>0}).length;
+      var c122=D.entries.filter(function(e){return (e.s122Duty||0)>0}).length;
+      var c232=D.entries.filter(function(e){return (e.s232Duty||0)>0}).length;
       var totals={td:0,ie:0,s122:0,s3:0,s2:0,st:0};
       var rows=filtered.map(function(e){
         totals.td+=e.totalDuty;totals.ie+=e.ieepaDuty;totals.s122+=(e.s122Duty||0);totals.s3+=e.s301Duty;totals.s2+=(e.s232Duty||0);totals.st+=e.stdDuty;
@@ -154,7 +156,7 @@ var D={"cards": {"totalDutyPaid": 1147697.26, "es003Duty": 437503.26, "refundApp
         var d=function(v){return v>0?fmt(v):'&mdash;'};
         return '<tr><td class="mono">'+e.entry+'</td><td>'+e.entryDate+'</td><td>'+e.liqDate+'</td><td>'+badge+'</td><td class="r">'+fmt(e.totalDuty)+'</td><td class="r">'+d(e.ieepaDuty)+'</td><td class="r">'+d(e.s122Duty)+'</td><td class="r">'+d(e.s301Duty)+'</td><td class="r">'+d(e.s232Duty)+'</td><td class="r">'+fmt(e.stdDuty)+'</td></tr>';
       }).join('');
-      document.getElementById('table-section').innerHTML='<div class="table-header"><h2>Entry Detail</h2><div class="table-tabs"><button class="table-tab '+(filter==='all'?'active':'')+'" onclick="renderEntries(0)">All ('+D.entries.length+')</button><button class="table-tab '+(filter==='ieepa'?'active':'')+'" onclick="renderEntries(4)">IEEPA ('+ic+')</button><button class="table-tab '+(filter==='paid'?'active':'')+'" onclick="renderEntries(1)">Refunded ('+pc+')</button><button class="table-tab '+(filter==='pending'?'active':'')+'" onclick="renderEntries(2)">Pending ('+pn+')</button><button class="table-tab '+(filter==='notfiled'?'active':'')+'" onclick="renderEntries(3)">Not in Claim ('+nf+')</button></div></div><table><thead><tr><th>Entry #</th><th>Entry Date</th><th>Liq. Date</th><th>Status</th><th class="r">Total Duty</th><th class="r">IEEPA</th><th class="r">Sec 122</th><th class="r">Sec 301</th><th class="r">Sec 232</th><th class="r">Standard</th></tr></thead><tbody>'+rows+'</tbody><tfoot><tr style="font-weight:700;border-top:2px solid var(--known-dark)"><td colspan="4">Total ('+filtered.length+' entries)</td><td class="r">'+fmt(totals.td)+'</td><td class="r">'+fmt(totals.ie)+'</td><td class="r">'+fmt(totals.s122)+'</td><td class="r">'+fmt(totals.s3)+'</td><td class="r">'+fmt(totals.s2)+'</td><td class="r">'+fmt(totals.st)+'</td></tr></tfoot></table>';
+      document.getElementById('table-section').innerHTML='<div class="table-header"><h2>Entry Detail</h2><div class="table-tabs"><button class="table-tab '+(filter==='all'?'active':'')+'" onclick="renderEntries(0)">All ('+D.entries.length+')</button><button class="table-tab '+(filter==='ieepa'?'active':'')+'" onclick="renderEntries(1)">IEEPA ('+ic+')</button><button class="table-tab '+(filter==='paid'?'active':'')+'" onclick="renderEntries(2)">Refunded ('+pc+')</button><button class="table-tab '+(filter==='s301'?'active':'')+'" onclick="renderEntries(3)">Section 301 ('+c301+')</button><button class="table-tab '+(filter==='s122'?'active':'')+'" onclick="renderEntries(4)">Section 122 ('+c122+')</button><button class="table-tab '+(filter==='s232'?'active':'')+'" onclick="renderEntries(5)">Section 232 ('+c232+')</button></div></div><table><thead><tr><th>Entry #</th><th>Entry Date</th><th>Liq. Date</th><th>Status</th><th class="r">Total Duty</th><th class="r">IEEPA</th><th class="r">Sec 122</th><th class="r">Sec 301</th><th class="r">Sec 232</th><th class="r">Standard</th></tr></thead><tbody>'+rows+'</tbody><tfoot><tr style="font-weight:700;border-top:2px solid var(--known-dark)"><td colspan="4">Total ('+filtered.length+' entries)</td><td class="r">'+fmt(totals.td)+'</td><td class="r">'+fmt(totals.ie)+'</td><td class="r">'+fmt(totals.s122)+'</td><td class="r">'+fmt(totals.s3)+'</td><td class="r">'+fmt(totals.s2)+'</td><td class="r">'+fmt(totals.st)+'</td></tr></tfoot></table>';
     }
     renderEntries('all');
   </script>
