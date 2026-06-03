@@ -146,9 +146,9 @@ var D={"cards": {"totalDutyPaid": 1147697.26, "es003Duty": 437503.26, "refundApp
 
     function renderEntries(filter){
       var filtered=D.entries;
-      if(filter==='paid')filtered=D.entries.filter(function(e){return e.refundAmount!==null});
-      else if(filter==='pending')filtered=D.entries.filter(function(e){return e.capeStatus==='CAPE Accepted'&&e.refundAmount===null});
-      else if(filter==='notfiled')filtered=D.entries.filter(function(e){return e.capeStatus==='Not Filed'});
+      var filters=['all','paid','pending','notfiled'];if(typeof filter==='number')filter=filters[filter];if(filter=='paid')filtered=D.entries.filter(function(e){return e.refundAmount!==null});
+      else if(filter=='pending')filtered=D.entries.filter(function(e){return e.capeStatus==='CAPE Accepted'&&e.refundAmount===null});
+      else if(filter=='notfiled')filtered=D.entries.filter(function(e){return e.capeStatus==='Not Filed'});
       var pc=D.entries.filter(function(e){return e.refundAmount!==null}).length;
       var pn=D.entries.filter(function(e){return e.capeStatus==='CAPE Accepted'&&e.refundAmount===null}).length;
       var nf=D.entries.filter(function(e){return e.capeStatus==='Not Filed'}).length;
@@ -161,7 +161,7 @@ var D={"cards": {"totalDutyPaid": 1147697.26, "es003Duty": 437503.26, "refundApp
         else badge='<span class="badge badge-notfiled">Not in Claim</span>';
         return '<tr><td class="mono">'+e.entry+'</td><td>'+e.entryDate+'</td><td>'+e.liqDate+'</td><td>'+badge+'</td><td class="r">'+fmt(e.totalDuty)+'</td><td class="r">'+fmt(e.ieepaDuty)+'</td><td class="r">'+(e.s301Duty>0?fmt(e.s301Duty):'&mdash;')+'</td><td class="r">'+fmt(e.stdDuty)+'</td></tr>';
       }).join('');
-      document.getElementById('table-section').innerHTML='<div class="table-header"><h2>Entry Detail</h2><div class="table-tabs"><button class="table-tab '+(filter==='all'?'active':'')+'" onclick="renderEntries('all')">All ('+D.entries.length+')</button><button class="table-tab '+(filter==='paid'?'active':'')+'" onclick="renderEntries('paid')">Refunded ('+pc+')</button><button class="table-tab '+(filter==='pending'?'active':'')+'" onclick="renderEntries('pending')">Pending ('+pn+')</button><button class="table-tab '+(filter==='notfiled'?'active':'')+'" onclick="renderEntries('notfiled')">Not in Claim ('+nf+')</button></div></div><table><thead><tr><th>Entry #</th><th>Entry Date</th><th>Liq. Date</th><th>Status</th><th class="r">Total Duty</th><th class="r">IEEPA</th><th class="r">Sec 301</th><th class="r">Standard</th></tr></thead><tbody>'+rows+'</tbody><tfoot><tr style="font-weight:700;border-top:2px solid var(--known-dark)"><td colspan="4">Total ('+filtered.length+' entries)</td><td class="r">'+fmt(totals.td)+'</td><td class="r">'+fmt(totals.ie)+'</td><td class="r">'+fmt(totals.s3)+'</td><td class="r">'+fmt(totals.st)+'</td></tr></tfoot></table>';
+      document.getElementById('table-section').innerHTML='<div class="table-header"><h2>Entry Detail</h2><div class="table-tabs"><button class="table-tab '+(filter=='all'?'active':'')+'" onclick="renderEntries(0)">All ('+D.entries.length+')</button><button class="table-tab '+(filter=='paid'?'active':'')+'" onclick="renderEntries(1)">Refunded ('+pc+')</button><button class="table-tab '+(filter=='pending'?'active':'')+'" onclick="renderEntries(2)">Pending ('+pn+')</button><button class="table-tab '+(filter=='notfiled'?'active':'')+'" onclick="renderEntries(3)">Not in Claim ('+nf+')</button></div></div><table><thead><tr><th>Entry #</th><th>Entry Date</th><th>Liq. Date</th><th>Status</th><th class="r">Total Duty</th><th class="r">IEEPA</th><th class="r">Sec 301</th><th class="r">Standard</th></tr></thead><tbody>'+rows+'</tbody><tfoot><tr style="font-weight:700;border-top:2px solid var(--known-dark)"><td colspan="4">Total ('+filtered.length+' entries)</td><td class="r">'+fmt(totals.td)+'</td><td class="r">'+fmt(totals.ie)+'</td><td class="r">'+fmt(totals.s3)+'</td><td class="r">'+fmt(totals.st)+'</td></tr></tfoot></table>';
     }
     renderEntries('all');
   </script>
