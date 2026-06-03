@@ -108,7 +108,6 @@
       <div class="stat-card green" id="card3"></div>
       <div class="stat-card" id="card4"></div>
     </div>
-    <div class="section" id="tariff-section"></div>
     <div class="two-col">
       <div class="section" id="liq-section"></div>
       <div class="section" id="importer-section"></div>
@@ -125,12 +124,10 @@ var D={"cards": {"totalDutyPaid": 1147697.26, "es003Duty": 437503.26, "refundApp
     document.getElementById('entry-count-badge').textContent=D.cards.totalEntries+' Entries Analyzed';
 
     document.getElementById('card1').innerHTML='<div class="stat-label">Total Duty Paid</div><div class="stat-value">'+fmtK(D.cards.totalDutyPaid)+'</div><div class="stat-sub">ES-003 '+fmtK(D.cards.es003Duty)+' + '+fmtK(D.cards.refundApplied)+' applied</div>';
-    document.getElementById('card2').innerHTML='<div class="stat-label">Refund Eligible</div><div class="stat-value">'+fmtK(D.cards.refundEligible)+'</div><div class="stat-sub">Total applied for refund</div>';
+    document.getElementById('card2').innerHTML='<div class="stat-label">Refund Eligible</div><div class="stat-value">'+fmtK(D.cards.refundEligible)+'</div><div class="stat-sub">Principal only &mdash; excludes interest</div>';
     document.getElementById('card3').innerHTML='<div class="stat-label">Refund Paid</div><div class="stat-value">'+fmtK(D.cards.refundPaid)+'</div><div class="stat-sub">'+D.cards.refundPaidCount+' entries &mdash; '+fmt(D.cards.refundPaidPrincipal)+' + '+fmt(D.cards.refundPaidInterest)+' interest</div>';
-    document.getElementById('card4').innerHTML='<div class="stat-label">Pending Refund</div><div class="stat-value">'+fmtK(D.cards.pendingRefund)+'</div><div class="stat-sub">Eligible '+fmtK(D.cards.refundEligible)+' - Paid '+fmtK(D.cards.refundPaid)+'</div>';
+    document.getElementById('card4').innerHTML='<div class="stat-label">Pending Refund</div><div class="stat-value">'+fmtK(D.cards.refundEligible - D.cards.refundPaidPrincipal)+'</div><div class="stat-sub">Principal only &mdash; excludes interest</div>';
 
-    var tb=D.tariffBreakdown;
-    document.getElementById('tariff-section').innerHTML='<h2>Tariff Category Breakdown</h2><div class="progress-bar-container"><div class="progress-segment seg-ieepa" style="width:'+tb.ieepa.pct+'%">IEEPA '+tb.ieepa.pct+'%</div><div class="progress-segment seg-301" style="width:'+tb.s301.pct+'%">301 '+tb.s301.pct+'%</div>'+(tb.s232.pct>0?'<div class="progress-segment" style="width:'+Math.max(tb.s232.pct,0.5)+'%;background:var(--known-tan)"></div>':'')+'<div class="progress-segment seg-std" style="width:'+tb.std.pct+'%">Std '+tb.std.pct+'%</div></div><div class="legend"><div class="legend-item"><div class="legend-dot" style="background:var(--known-dark)"></div>IEEPA &mdash; '+fmtK(tb.ieepa.duty)+' ('+tb.ieepa.lines+' lines)</div><div class="legend-item"><div class="legend-dot" style="background:#1a5c58"></div>Section 301 &mdash; '+fmtK(tb.s301.duty)+' ('+tb.s301.lines+' lines)</div>'+(tb.s232.duty>0?'<div class="legend-item"><div class="legend-dot" style="background:var(--known-tan)"></div>Section 232 &mdash; '+fmtK(tb.s232.duty)+' ('+tb.s232.lines+' lines)</div>':'')+'<div class="legend-item"><div class="legend-dot" style="background:var(--known-light)"></div>Standard &mdash; '+fmtK(tb.std.duty)+' ('+tb.std.lines+' lines)</div></div>';
 
     var liqHtml='';
     D.liquidationDates.forEach(function(ld){
